@@ -1,8 +1,15 @@
 // Modules
-const {app, BrowserWindow, Menu, MenuItem} = require('electron')
-const windowStateKeeper = require('electron-window-state')
+const {app, BrowserWindow, dialog, Menu, MenuItem} = require('electron')
+const fs = require('fs');
+const windowStateKeeper = require('electron-window-state');
+const { StringDecoder } = require('string_decoder');
+const { getHeapCodeStatistics } = require('v8');
+const fetch = require("node-fetch");
+// const lib = require("./menu-functions.js")
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+// import openFile from './open-file.js'
 let mainWindow
 
 // Create a new BrowserWindow when `app` is ready
@@ -21,6 +28,8 @@ function createWindow () {
     webPreferences: {
       worldSafeExecuteJavaScript: true,
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
       devTools: true
     }
   })
@@ -48,14 +57,18 @@ let fileMenu = new MenuItem(
   { 
     label: 'File',
     submenu: [
-      // add shortcuts later
-      {label: 'Open File'},
+      {label: 'Open File',
+       accelerator: 'CommandOrControl+N',
+       click() {
+          openFile();
+       }
+      },
       {label: 'Open Folder'},
-      {label: 'Open Recent'},
       {label: 'Save'},
       {label: 'Save As'},
+      {label: 'Close File'},
       {label: 'Close Folder'},
-      {label: 'Close Editor'},
+      {label: 'Revert File'}
     ]
   }
 )
@@ -63,15 +76,19 @@ let fileMenu = new MenuItem(
 let editMenu = new MenuItem(
   { 
     label: 'Edit',
-    submenu: [
-      // add shortcuts later
-      {label: 'Undo'}, // might not be necessary
-      {label: 'Redo'},
-      {label: 'Cut'},
-      {label: 'Copy'},
-      {label: 'Paste'},
-      {label: 'Find'}
-    ]
+    role: 'editMenu'
+    // label: 'Edit',
+    // submenu: [
+    //   {label: 'Undo',      
+    //    role: 'undo'
+    //   }, 
+    //   {label: 'Redo'},
+    //   {label: 'Cut'},
+    //   {label: 'Copy'},
+    //   {label: 'Paste'},
+    //   {label: 'Find'},
+    //   {label: 'Replace'}
+    // ]
   }
 )
 
@@ -79,11 +96,12 @@ let viewMenu = new MenuItem(
   { 
     label: 'View',
     submenu: [
-      // add shortcuts later
       {label: 'Search File'},
+      {label: 'Expand File Panel'},
       {label: 'Expand Editor'},
       {label: 'Expand Terminal'},
-      {label: 'Close File Panel'}
+      {label: 'Close File Panel'},
+      {label: 'Close Terminal'}
     ]
   }
 )
@@ -119,3 +137,32 @@ app.on('activate', () => {
 })
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'; 
+
+// test ing for adding text to sidebar
+function addText() {
+  document.getElementById('mySidebar').innerHTML += "Next file<br/><br/>";
+}
+
+
+// open file from menu bar
+function openFile() {
+  const files = dialog.showOpenDialogSync(mainWindow, {
+    properties: ['openFile'],
+    filters: [{name: "All Files", extensions: ['*'] }]
+  })
+
+  if (!files) return;
+
+  const file = files[0];
+  const fileName = file.substring(file.lastIndexOf('\\') + 1);  // shortened file name
+
+  const fileContent = fs.readFileSync(file).toString();
+  console.log(fileContent);
+
+  // print something to sidebar as a result -> *blocker: cannot access html element*
+  // fetch('renderer/main.html')
+  //   .then(result => { return result.text(); })
+  //   .then(content => document.getElementById("mySidebar").innerHTML = content)
+  document.getElementById('mySidebar').innerHTML += "Opened file<br/><br/>";
+}
+ 

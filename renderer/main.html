@@ -2,44 +2,71 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Visualize</title>
-    <link rel="stylesheet" href="main.css">   
+    <title>STAF</title>
+    <link rel="stylesheet" href="main.css"> 
+    <link rel="stylesheet" href="terminal.css"
   </head>
+  
   <body>
     <div class="mainApp">
 
-        <div class="topBar">
-
-          <div class="titleBar">
-            <button id="showHideMenus" class="toggleButton"></button>
-            <div class="title">
-              App Menu
-            </div>
-          </div>
-
-          <div class="titleBarBtns">
-            <button id="minimizeBtn" class="topBtn minimizeBtn">-</button>
-            <button id="maximizeBtn" class="topBtn maximizeBtn">+</button>
-            <button id="closeBtn" class="topBtn closeBtn">X</button>
-          </div>
-
-        </div>
-
         <div class="contentArea">
-          <div class="leftMenu"> 
-          </div>
-                
-          <div class="contentPages">     
-            <p>Hello World!</p>
-          </div>
-        </div>
 
+          <div id="mySidebar" class="sidebar"> 
+            <!-- when open file happens, print hi -->
+            <button id="btn" class="openSidebar" onclick="addText()">&#9776</button>
+            <br/> <br/>
+            <p>First file</p>
+          </div>     
+    
+          <div id="myContentPages" class="contentPages">   
+          </div>
+
+          <div id="myTerminal" class="terminal"> 
+            <button id="btn" class="openTerminal">^</button>
+          </div>
+
+        </div>
 
       <script>
-        require('./main')
+        let btn = document.querySelector("#btn");
+        // let sidebar = document.querySelector(".sidebar");
+        let sidebar = document.getElementById("mySidebar");
+        let sidebarValue = document.getElementById("mySidebar").value;
+        localStorage.something = sidebarValue;
+  
+        var timesClicked = 0;
+
+        // adjust all widths when you click 'menu' icon
+        function openNav() {
+          if (timesClicked % 2 == 0) {
+            // sidebar.classList.toggle("focus-visible");
+            document.getElementById("mySidebar").style.width = "20%";
+            document.getElementById("btn").style.left = "80%";
+            document.getElementById("myContentPages").style.width = "80%";
+            document.getElementById("myTerminal").style.width = "80%";
+          } else {
+            document.getElementById("mySidebar").style.width = "4%";
+            document.getElementById("btn").style.left = "10%";
+            document.getElementById("myContentPages").style.width = "96%";
+            document.getElementById("myTerminal").style.width = "96%";
+          };
+          timesClicked++;
+        }
+
       </script>
     </div>
 
   </body>
 </html>
 
+<script src="../main.js"></script>
+
+
+<!-- // btn.addEventListener("click", function() {
+//   leftMenu.classList.toggle("focus");
+// })
+
+// if(document.getElementById('btn').clicked == true) {
+//   console.log("button was clicked");
+// } -->

@@ -14,10 +14,17 @@
     "Master Electron",
     "demo"
   ],
+  "type": "commonjs",
   "author": "GitHub, Stackacademytv",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^19.0.0",
+    "electron": "19.0.8",
     "nodemon": "^2.0.0"
+  },
+  "dependencies": {
+    "electron-window-state": "^5.0.3",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.7.3",
+    "require": "^2.4.20"
   }
 }
