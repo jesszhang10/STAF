@@ -17,11 +17,7 @@
                 "tjForPerfAssessmentUnits" : "%",
                 "tjForPerfAssessmentValue" : 60,
                 "availableSystemThermalCapacityUnits" : "W",
-                "availableSystemThermalCapacityValue" : 11.2,
-                "socSystemAndMemoryPowerBudgetUnits" : "W",
-                "socSystemAndMemoryPowerBudgetValue" : 6.8,
-                "restOfSystemPowerBudgetUnits" : "W",
-                "restOfSystemPowerBudgetValue" : 4.5
+                "availableSystemThermalCapacityValue" : 11.2
           },
           "systemValues" : 
           {
@@ -32,11 +28,7 @@
                 "tjForPerfAssessmentUnits" : "%",
                 "tjForPerfAssessmentValue" : 60,
                 "availableSystemThermalCapacityUnits" : "W",
-                "availableSystemThermalCapacityValue" : 10.1,
-                "socSystemAndMemoryPowerBudgetUnits" : "W",
-                "socSystemAndMemoryPowerBudgetValue" : 6.2,
-                "restOfSystemPowerBudgetUnits" : "W",
-                "restOfSystemPowerBudgetValue" : 4.4
+                "availableSystemThermalCapacityValue" : 10.1
           },
           "otherValues" : 
           {
@@ -47,11 +39,7 @@
                 "tjForPerfAssessmentUnits" : "%",
                 "tjForPerfAssessmentValue" : 40,
                 "availableSystemThermalCapacityUnits" : "W",
-                "availableSystemThermalCapacityValue" : 10.2,
-                "socSystemAndMemoryPowerBudgetUnits" : "W",
-                "socSystemAndMemoryPowerBudgetValue" : 7.8,
-                "restOfSystemPowerBudgetUnits" : "W",
-                "restOfSystemPowerBudgetValue" : 21.5
+                "availableSystemThermalCapacityValue" : 10.2
           },
           "moreValues" : 
           {
@@ -62,11 +50,7 @@
                 "tjForPerfAssessmentUnits" : "%",
                 "tjForPerfAssessmentValue" : 20,
                 "availableSystemThermalCapacityUnits" : "W",
-                "availableSystemThermalCapacityValue" : 30.2,
-                "socSystemAndMemoryPowerBudgetUnits" : "W",
-                "socSystemAndMemoryPowerBudgetValue" : 40,
-                "restOfSystemPowerBudgetUnits" : "W",
-                "restOfSystemPowerBudgetValue" : 30
+                "availableSystemThermalCapacityValue" : 30.2
           }     
           
        }
