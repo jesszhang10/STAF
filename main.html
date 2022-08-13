@@ -1,0 +1,38 @@
+<!-- This file provides the main architecture for the application. -->
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>STAF</title>
+    <link rel="stylesheet" href="main.css"> 
+  </head>
+
+  <script src="main.js"></script>
+  <script src="sidebar-terminal-buttons.js"></script>
+  <script src="renderer.js"></script>
+
+  
+  <body>
+
+    <div class="mainApp">
+        <div class="contentArea">
+
+          <!-- CREATE SIDEBAR -->
+          <div id="mySidebar" class="sidebar"> 
+            <button id="openSidebarBtn" class="sidebarBtn" onclick="openNav()">&#9776</button><br><br>
+            <button id="drawChartBtn" class="chartBtn" onclick="drawChart(fileName)">Load Chart &#62;</button> 
+          </div>    
+
+          <!-- CREATE CONTENT PAGES (chart will be loaded here) -->
+          <div id="myContentPages" class="contentPages" contenteditable="true"></div>
+
+      </div>
+    </div>
+
+  </body>
+</html>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="create-chart.js"></script>

@@ -1,21 +1,18 @@
-// Modules
-const {app, BrowserWindow, dialog, Menu, MenuItem} = require('electron')
+/* The main functionality for the application. Creates the browser window and menu bar. 
+Renders main.html. */
+
+const {app, BrowserWindow, dialog, Menu, MenuItem, ipcMain} = require('electron');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
 const { StringDecoder } = require('string_decoder');
 const { getHeapCodeStatistics } = require('v8');
-const fetch = require("node-fetch");
-// const lib = require("./menu-functions.js")
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-// import openFile from './open-file.js'
-let mainWindow
 
-// Create a new BrowserWindow when `app` is ready
+/* CREATE MAIN WINDOW */
+
+let mainWindow;
+
 function createWindow () {
-  // Win state keeper
-
   // let state = windowStateKeeper({
   //   defaultWidth: 1000, defaultHeight: 800
   // })
@@ -34,41 +31,65 @@ function createWindow () {
     }
   })
 
-  // Load index.html into the new BrowserWindow
-  mainWindow.loadFile('renderer/main.html')
+  mainWindow.loadFile('main.html');
 
-  // // Manage new window state
-  // state.manage(mainWindow)
+  // state.manage(mainWindow);
 
-  // Open DevTools - Remove for PRODUCTION!
+  // Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
 
-  Menu.setApplicationMenu(mainMenu)
-  
-  // Listen for window being closed
+  Menu.setApplicationMenu(mainMenu);
+
   mainWindow.on('closed',  () => {
     mainWindow = null
   })
 }
 
-let mainMenu = new Menu()
+
+/* CREATE MENU BAR */
+
+let mainMenu = new Menu();
 
 let fileMenu = new MenuItem(
   { 
     label: 'File',
     submenu: [
+
       {label: 'Open File',
-       accelerator: 'CommandOrControl+N',
-       click() {
-          openFile();
-       }
+        accelerator: 'CommandOrControl+O',
+        click: () => {
+          [fileName, fileContent] = openFile();
+          mainWindow.webContents.send('open-file', fileName, fileContent);
+        }, 
       },
-      {label: 'Open Folder'},
-      {label: 'Save'},
-      {label: 'Save As'},
-      {label: 'Close File'},
-      {label: 'Close Folder'},
-      {label: 'Revert File'}
+
+      {label: 'Open Folder',
+        accelerator: 'CommandOrControl+K',},
+
+      {label: 'Save',
+        accelerator: 'CommandOrControl+S',
+        click: () => {
+          try {
+            mainWindow.webContents.send('save-file', fileName);
+          } catch {
+            console.log('No file to be saved.');
+          } 
+        }
+      },
+  
+      {label: 'Save As',
+        accelerator: 'CommandOrControl+Shift+S',
+        click: () => {
+          saveFileAs();
+        }
+      },
+
+      {label: 'Close File',
+        accelerator: 'CmdorCtrl+W'},
+
+      {label: 'Close Folder',
+        accelerator: 'CmdorCtrl+U',
+    },
     ]
   }
 )
@@ -77,18 +98,6 @@ let editMenu = new MenuItem(
   { 
     label: 'Edit',
     role: 'editMenu'
-    // label: 'Edit',
-    // submenu: [
-    //   {label: 'Undo',      
-    //    role: 'undo'
-    //   }, 
-    //   {label: 'Redo'},
-    //   {label: 'Cut'},
-    //   {label: 'Copy'},
-    //   {label: 'Paste'},
-    //   {label: 'Find'},
-    //   {label: 'Replace'}
-    // ]
   }
 )
 
@@ -99,70 +108,72 @@ let viewMenu = new MenuItem(
       {label: 'Search File'},
       {label: 'Expand File Panel'},
       {label: 'Expand Editor'},
-      {label: 'Expand Terminal'},
       {label: 'Close File Panel'},
-      {label: 'Close Terminal'}
     ]
   }
 )
 
-let terminalMenu = new MenuItem(
-  { 
-    label: 'Terminal',
-    submenu: [
-      // add shortcuts later
-      {label: 'New Terminal'},
-      {label: 'Split Terminal'},
-      {label: 'Run Task'}
-    ]
-  }
-)
+mainMenu.append(fileMenu);
+mainMenu.append(editMenu);
+mainMenu.append(viewMenu);
 
-mainMenu.append(fileMenu)
-mainMenu.append(editMenu)
-mainMenu.append(viewMenu)
-mainMenu.append(terminalMenu)
 
-// Electron `app` is ready
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
-// Quit when all windows are closed 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
-// When app icon is clicked and app is running, recreate the BrowserWindow
 app.on('activate', () => {
   if (mainWindow === null) createWindow()
 })
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'; 
 
-// test ing for adding text to sidebar
-function addText() {
-  document.getElementById('mySidebar').innerHTML += "Next file<br/><br/>";
-}
 
 
-// open file from menu bar
+/* MENU BAR FUNCTIONS BELOW */
+
+/* OPENS FILE FROM MENU BAR, RETURNS FILE NAME & CONTENT */
+
 function openFile() {
   const files = dialog.showOpenDialogSync(mainWindow, {
     properties: ['openFile'],
-    filters: [{name: "All Files", extensions: ['*'] }]
+    filters: [{name: 'All Files', extensions: ['*'] }]
   })
 
   if (!files) return;
 
   const file = files[0];
   const fileName = file.substring(file.lastIndexOf('\\') + 1);  // shortened file name
+  
+  // Put fileContent in pretty json
+  var content = fs.readFileSync(file).toString();
+  var fileContent = JSON.stringify(content, null, 2).replace(/\\r\\n/g, '<br/>');
+  fileContent = fileContent.replace(/\\/g, '');
+  fileContent = "<pre>" + fileContent.slice(1, -1) + "</pre>";
 
-  const fileContent = fs.readFileSync(file).toString();
-  console.log(fileContent);
-
-  // print something to sidebar as a result -> *blocker: cannot access html element*
-  // fetch('renderer/main.html')
-  //   .then(result => { return result.text(); })
-  //   .then(content => document.getElementById("mySidebar").innerHTML = content)
-  document.getElementById('mySidebar').innerHTML += "Opened file<br/><br/>";
+  return [fileName, fileContent];
 }
- 
+
+
+
+/* SAVES FILE AS NEW FILE FROM MENU BAR, INCLUDING ANY UPDATED CONTENT */
+// [TODO: implement functionality]
+function saveFileAs(fileName) {
+  // [later] pull content from content pages
+
+  // let filename = dialog.showSaveDialog(mainWindow, {
+  //   title: 'Download File',
+  //   filters: [{name: 'All Files', extensions: ['*'] }]
+  // });
+
+
+    // let options = {
+    //   buttons: ['Close']
+    // };
+}
+
+
+
+
