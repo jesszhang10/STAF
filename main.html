@@ -11,7 +11,6 @@
   <script src="main.js"></script>
   <script src="sidebar-terminal-buttons.js"></script>
   <script src="renderer.js"></script>
-
   
   <body>
 
@@ -21,11 +20,57 @@
           <!-- CREATE SIDEBAR -->
           <div id="mySidebar" class="sidebar"> 
             <button id="openSidebarBtn" class="sidebarBtn" onclick="openNav()">&#9776</button><br><br>
-            <button id="drawChartBtn" class="chartBtn" onclick="drawChart(fileName)">Load Chart &#62;</button> 
-          </div>    
+            <button id="drawChartBtn" class="chartBtn">Load Chart &#62;</button> 
+            
+            <script>
+              var button = document.getElementById('drawChartBtn');
+
+              button.addEventListener('click', () => {
+                fileContent = document.getElementById('myContentPages').innerText;
+                drawChart();
+                // createBrowserWindow() not working;
+              });
+
+              function createBrowserWindow() {
+                const remote = require('electron').remote;
+                const BrowserWindow = remote.BrowserWindow;
+                const win = new BrowserWindow({
+                  nodeIntegration: true,
+                  enableRemoteModule: true,
+                  height: 600,
+                  width: 800
+                });
+              }
+            </script>
+
+          </div>   
+
 
           <!-- CREATE CONTENT PAGES (chart will be loaded here) -->
           <div id="myContentPages" class="contentPages" contenteditable="true"></div>
+
+          <script> 
+            // Enable tabbing in editor
+            document.getElementById("myContentPages").onkeydown = function(e) {
+              if (e.keyCode === 9) { // Tab key
+                e.preventDefault();  // Prevents tabbing out of editor
+
+                // Insert four non-breaking spaces for the tab key
+                var editor = document.getElementById("myContentPages");
+                var doc = editor.ownerDocument.defaultView;
+                var sel = doc.getSelection();
+                var range = sel.getRangeAt(0);
+
+                var tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0");
+                range.insertNode(tabNode);
+
+                range.setStartAfter(tabNode);
+                range.setEndAfter(tabNode); 
+                sel.removeAllRanges();
+                sel.addRange(range);
+              }
+            }
+          </script>
 
       </div>
     </div>

@@ -1,6 +1,18 @@
-const { contextBridge } = require("electron");
+/* Called from menu bar. JS file rendered to display chart in new window. */
 
-function drawChart() {
+const { ipcRenderer } = require('electron');
+const Chart = require('chart.js');
+
+// Create chart in new window
+ipcRenderer.on('make-chart', function (e, fileContent)
+{
+    // need to get updated fileContent
+    makeChart(fileContent);
+});
+
+
+// Function to create chart 
+function makeChart(fileContent) {
     try {
         /* PART 1: READ DATA */
 
@@ -11,7 +23,7 @@ function drawChart() {
         var specs = fileContent['specifications'][0];
 
         // 3. Build up chart labels from targets, since targets will be in every json
-        labels = [];
+        var labels = [];
         for (let [label, value] of Object.entries(specs['targets'])) {
             if (!isNaN(value)) {
                 labels.push(label);
@@ -25,7 +37,7 @@ function drawChart() {
         for (let [specName, specValues] of Object.entries(specs)) {
             let datasetDict = {};
 
-            if (isDict(specValues)) {       
+            if (isDict(specValues)) {    
                 // a. Set label        
                 datasetDict['label'] = specName;
 
@@ -38,10 +50,11 @@ function drawChart() {
                 }
                 datasetDict['data'] = data;
                 datasets.push(datasetDict);  
-                
+
                 // c. Set color
-                color = colors[index];
-                colorTransparent = colorsTransparent[index];
+                var color = colors[index];
+                var colorTransparent = colorsTransparent[index];
+
                 datasetDict['fill'] = true;
                 datasetDict['backgroundColor'] = colorTransparent;
                 datasetDict['borderColor'] = color;
@@ -52,20 +65,14 @@ function drawChart() {
             }
         }
 
-
-        /* PART 2: BUILD RADAR CHART */
-        /* Try to create new window */
-     
-        // [LATER] place chart in new pop-up window
         // 1. Clear content pages
-        var contentPages = document.getElementById('myContentPages');
-        contentPages.innerHTML = '';
-        
+        var chartPages = document.getElementById('myChartPages');
+        chartPages.innerHTML = '';
+
         // 2. Create canvas for chart
         var canvas = document.createElement('canvas');
         canvas.className = 'chart';
-        contentPages.appendChild(canvas);
-        
+        chartPages.appendChild(canvas);
         var ctx = canvas.getContext('2d');
 
         var chartData = {
@@ -74,10 +81,10 @@ function drawChart() {
         };          
 
         Chart.defaults.color = '#dfe6f6';
-        Chart.defaults.borderColor = '#5a6783';
+        Chart.defaults.borderColor = '#dfe6f6';
         Chart.defaults.borderWidth = 0.5;
 
-        // 3. Fill in chart
+        // // 3. Fill in chart
         var config = new Chart(ctx, {
             type: 'radar',
             data: chartData,
@@ -109,6 +116,7 @@ function drawChart() {
 }
 
 
+// Color palette: Retro metro from https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
 // Up to 7 parameters, defined by colors:
 // red, blue, yellow, green, orange, purple, pink
 var colors = 
@@ -135,3 +143,5 @@ var colorsTransparent =
 function isDict(obj) {
     return typeof obj === 'object' && obj != null && !(obj instanceof Array) && !(obj instanceof String);
 }
+
+

@@ -65,3 +65,31 @@
 //     }
 //   )
 
+
+// fileContent = JSON.stringify(fileContent, null, 2).replace(/\\r\\n/g, '<br/>');
+// fileContent = fileContent.replace(/\\r\\n\\t/g, '<br/>')
+// fileContent = fileContent.replace(/\\/g, '');
+// fileContent = "<pre>" + fileContent + "</pre>";
+
+// Formats content pages neatly
+// function formatContentPages(fileContent) {
+//     // Clear content pages
+//     document.getElementById("myContentPages").innerText = '';
+    
+//     var lines = fileContent.split('\n');
+
+//     for (var line of lines) {      
+//         /// line starts with a tab
+//         if (line.indexOf(' ') >= 0) {
+//             const index = line.search(/\S/);
+//             line = whitespace.repeat(index-1) + line;
+//             console.log(index);
+//         }
+//         var lineNode = document.createTextNode(line);
+//         var newLine = document.createElement('br');
+
+//         document.getElementById("myContentPages").appendChild(lineNode);
+//         document.getElementById("myContentPages").appendChild(newLine);
+//     }
+// }
+// const whitespace = "\u00a0";

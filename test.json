@@ -11,7 +11,7 @@
           "targets" : 
           {
                 "skinTempUnits" : "°C",
-                "skinTempValue" : 41,
+                "skinTempValue" : "51",
                 "motherboardAcousticSpecUnits" : "dBA",
                 "motherboardAcousticValue" : 9.7,
                 "tjForPerfAssessmentUnits" : "%",
@@ -23,20 +23,20 @@
                 "restOfSystemPowerBudgetUnits" : "W",
                 "restOfSystemPowerBudgetValue" : 4.5
           },
-          "systemValues" : 
+          "otherValues" : 
           {
                 "skinTempUnits" : "°C",
-                "skinTempValue" : 22,
+                "skinTempValue" : "40",
                 "motherboardAcousticSpecUnits" : "dBA",
                 "motherboardAcousticValue" : 9.4,
                 "tjForPerfAssessmentUnits" : "%",
                 "tjForPerfAssessmentValue" : 64,
                 "availableSystemThermalCapacityUnits" : "W",
-                "availableSystemThermalCapacityValue" : 15.1,
+                "availableSystemThermalCapacityValue" : 20,
                 "socSystemAndMemoryPowerBudgetUnits" : "W",
-                "socSystemAndMemoryPowerBudgetValue" : 6.2,
+                "socSystemAndMemoryPowerBudgetValue" : 29,
                 "restOfSystemPowerBudgetUnits" : "W",
-                "restOfSystemPowerBudgetValue" : 4.4
+                "restOfSystemPowerBudgetValue" : 4.3
           }          
        }
     ]

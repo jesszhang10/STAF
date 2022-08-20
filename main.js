@@ -1,12 +1,11 @@
 /* The main functionality for the application. Creates the browser window and menu bar. 
 Renders main.html. */
 
-const {app, BrowserWindow, dialog, Menu, MenuItem, ipcMain} = require('electron');
+var {app, BrowserWindow, dialog, Menu, MenuItem, ipcMain} = require('electron');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
 const { StringDecoder } = require('string_decoder');
 const { getHeapCodeStatistics } = require('v8');
-
 
 /* CREATE MAIN WINDOW */
 
@@ -32,16 +31,48 @@ function createWindow () {
   })
 
   mainWindow.loadFile('main.html');
-
   // state.manage(mainWindow);
 
   // Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
 
   Menu.setApplicationMenu(mainMenu);
-
+  
   mainWindow.on('closed',  () => {
     mainWindow = null
+  })
+}
+
+
+/* CREATE SECOND WINDOW WHEN 'View Chart' IS CALLED */
+
+let secondWindow;
+
+function createSecondWindow () {
+  // let state = windowStateKeeper({
+  //   defaultWidth: 900, defaultHeight: 750
+  // })
+
+  secondWindow = new BrowserWindow({
+    // x: state.x, y: state.y,
+    // width: state.width, height: state.height,
+    // minWidth: 350, maxWidth: 1200, minHeight:300,
+    width: 900, height: 750,
+    webPreferences: {
+      worldSafeExecuteJavaScript: true,
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+    }
+  })
+
+  secondWindow.loadFile('chart.html');
+  // state.manage(mainWindow);
+
+  secondWindow.webContents.openDevTools();
+
+  secondWindow.on('closed',  () => {
+    secondWindow = null
   })
 }
 
@@ -58,8 +89,12 @@ let fileMenu = new MenuItem(
       {label: 'Open File',
         accelerator: 'CommandOrControl+O',
         click: () => {
-          [fileName, fileContent] = openFile();
-          mainWindow.webContents.send('open-file', fileName, fileContent);
+          try {
+            [fileName, fileContent] = openFile();
+            mainWindow.webContents.send('open-file', fileName, fileContent);
+          } catch {
+            console.log('No file was opened.');
+          }
         }, 
       },
 
@@ -70,7 +105,9 @@ let fileMenu = new MenuItem(
         accelerator: 'CommandOrControl+S',
         click: () => {
           try {
-            mainWindow.webContents.send('save-file', fileName);
+            mainWindow.webContents.send('save-file', fileContent);
+            console.log('New file content: ');
+            console.log(fileContent);
           } catch {
             console.log('No file to be saved.');
           } 
@@ -80,7 +117,12 @@ let fileMenu = new MenuItem(
       {label: 'Save As',
         accelerator: 'CommandOrControl+Shift+S',
         click: () => {
-          saveFileAs();
+          try {
+            mainWindow.webContents.send('save-as');
+            saveFileAs();
+          } catch {
+            console.log('No file name was specified.');
+          }
         }
       },
 
@@ -105,10 +147,18 @@ let viewMenu = new MenuItem(
   { 
     label: 'View',
     submenu: [
-      {label: 'Search File'},
-      {label: 'Expand File Panel'},
+      {label: 'View Chart', 
+        accelerator: 'CmdorCtrl+Q',
+        click: () => {
+          createSecondWindow();
+          secondWindow.webContents.send('make-chart', fileContent);
+        }
+      },
+      {label: 'Search File',
+        accelerator: 'CmdorCtrl+F',
+      },,
       {label: 'Expand Editor'},
-      {label: 'Close File Panel'},
+      {label: 'Expand File Panel'},
     ]
   }
 )
@@ -132,10 +182,10 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 
 
+
 /* MENU BAR FUNCTIONS BELOW */
 
 /* OPENS FILE FROM MENU BAR, RETURNS FILE NAME & CONTENT */
-
 function openFile() {
   const files = dialog.showOpenDialogSync(mainWindow, {
     properties: ['openFile'],
@@ -144,14 +194,10 @@ function openFile() {
 
   if (!files) return;
 
+  // Get file name and content
   const file = files[0];
   const fileName = file.substring(file.lastIndexOf('\\') + 1);  // shortened file name
-  
-  // Put fileContent in pretty json
-  var content = fs.readFileSync(file).toString();
-  var fileContent = JSON.stringify(content, null, 2).replace(/\\r\\n/g, '<br/>');
-  fileContent = fileContent.replace(/\\/g, '');
-  fileContent = "<pre>" + fileContent.slice(1, -1) + "</pre>";
+  var fileContent = fs.readFileSync(file).toString();
 
   return [fileName, fileContent];
 }
@@ -159,21 +205,20 @@ function openFile() {
 
 
 /* SAVES FILE AS NEW FILE FROM MENU BAR, INCLUDING ANY UPDATED CONTENT */
-// [TODO: implement functionality]
-function saveFileAs(fileName) {
-  // [later] pull content from content pages
+function saveFileAs() {
 
-  // let filename = dialog.showSaveDialog(mainWindow, {
-  //   title: 'Download File',
-  //   filters: [{name: 'All Files', extensions: ['*'] }]
-  // });
+  dialog.showSaveDialog({
+  }).then(file => {
 
+    if (!file.canceled) {
+      fs.writeFile(file.filePath.toString(), fileContent, function (err) {
+        if (err) throw err;
+      });
+    }
 
-    // let options = {
-    //   buttons: ['Close']
-    // };
+  }).catch(err => {
+    console.log(err)
+  });
+  
 }
-
-
-
 

@@ -4,48 +4,60 @@ in content pages. */
 
 const { ipcRenderer } = require('electron');
 
+
 // fileName stores the most recently loaded or recently clicked file
 var fileName = '';
+var fileContent = '';
+var buttonToContent = {};
+
 
 // Receives the call to open file
 ipcRenderer.on('open-file', function (e, filename, fileContent)
 {
-    // Set fileName for global use
+    // 1. Set fileName to most recently opened file
     fileName = filename;
 
-    // Create button for each file with unique ID
+    // 2. Load content pages
+    document.getElementById("myContentPages").innerHTML = "<pre><code>" + fileContent +"</code></pre>";
+
+    // 3. Create button for each file with unique ID
     var fileBtn = document.createElement('div');
     fileBtn.className = 'fileButton';
     fileBtn.id = fileName;
     fileBtn.innerHTML = fileName;
 
-    // If button is clicked, load text into content pages
+    buttonToContent[fileName] = fileContent;
+
     fileBtn.onclick = function() {
-        document.getElementById("myContentPages").innerHTML = fileContent;
         fileName = fileBtn.id;
+        document.getElementById("myContentPages").innerHTML = "<pre><code>" + buttonToContent[fileName] +"</code></pre>";
     }
-
     document.getElementById("mySidebar").appendChild(fileBtn);
-
-    // By default, load text of recently uploaded file into content pages
-    document.getElementById("myContentPages").innerHTML = fileContent;
+   
 });
-
 
 
 // Receives the call to save file
-ipcRenderer.on('save-file', function (e, filename)
+ipcRenderer.on('save-file', function (e, fileContent)
 {
-    let updatedContent = document.getElementById('myContentPages').innerHTML;
-    console.log(updatedContent);
+    fileContent = document.getElementById('myContentPages').innerText;
+    buttonToContent[fileName] = fileContent;
+    
+    // make fileContent changes persists
 
-    // [TODO: fix formatting of content as saved in VSCode & set fileContent to updatedContent]
-    fs.writeFile(filename, updatedContent, (err) =>  {   
+    // Overwrite file with new changes
+    fs.writeFile(fileName, fileContent, (err) => {
         if (err) {
-            console.log('error');  
-        }     
-    });   
+            console.log(err);
+        }
+    }); 
 });
 
 
 
+// Receives the call to save file as another file
+ipcRenderer.on('save-as', function (e)
+{
+    var contentPages = document.getElementById('myContentPages');
+    fileContent = contentPages.innerText;
+});
