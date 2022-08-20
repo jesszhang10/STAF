@@ -18,3 +18,19 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
+
+
+
+- Menu.js opens up the browser window and menu bar
+- Main.html renders the display
+- Main.css provides the styling for main window
+- Renderer.js implements functionality for menu bar functions 'open', 'save', and 'save as'
+- Create-chart.js draws a chart from the 'load chart' button in main.html
+
+- Chart.html renders the display for the second browser window (chart)
+- Chart.css provides the chart styling
+- Chart-renderer.js receives the call from menu bar 'view chart' to draw the chart
+
+- Move-sidebar.js expands and sidebar (file panel)
+- Fanless-configs.json and fanless-configs-copy.json are testing files
+

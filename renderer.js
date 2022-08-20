@@ -8,7 +8,9 @@ const { ipcRenderer } = require('electron');
 // fileName stores the most recently loaded or recently clicked file
 var fileName = '';
 var fileContent = '';
+// Maps each button to its file content
 var buttonToContent = {};
+var currentClickedBtn = null;
 
 
 // Receives the call to open file
@@ -21,19 +23,29 @@ ipcRenderer.on('open-file', function (e, filename, fileContent)
     document.getElementById("myContentPages").innerHTML = "<pre><code>" + fileContent +"</code></pre>";
 
     // 3. Create button for each file with unique ID
-    var fileBtn = document.createElement('div');
-    fileBtn.className = 'fileButton';
-    fileBtn.id = fileName;
-    fileBtn.innerHTML = fileName;
+    if (!(fileName in buttonToContent)) {
+        var fileBtn = document.createElement('div');
+        fileBtn.className = 'fileButton';
+        fileBtn.id = fileName;
+        fileBtn.innerHTML = fileName;
+        
+        buttonToContent[fileName] = fileContent;
 
-    buttonToContent[fileName] = fileContent;
+        // When a file is clicked, highlight button and display the file content
+        fileBtn.onclick = function() {
+            if (currentClickedBtn) {
+                currentClickedBtn.style.backgroundColor = '#00223B';
+            }
+            fileBtn.style.backgroundColor = '#2c456e';
+            currentClickedBtn = fileBtn;
 
-    fileBtn.onclick = function() {
-        fileName = fileBtn.id;
-        document.getElementById("myContentPages").innerHTML = "<pre><code>" + buttonToContent[fileName] +"</code></pre>";
+            fileName = fileBtn.id;
+            document.getElementById("myContentPages").innerHTML = "<pre><code>" + buttonToContent[fileName] +"</code></pre>";
+        }
+        document.getElementById("mySidebar").appendChild(fileBtn);
+
+        // close button to make the whole button close
     }
-    document.getElementById("mySidebar").appendChild(fileBtn);
-   
 });
 
 
