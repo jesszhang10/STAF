@@ -18,14 +18,15 @@
     "author": "GitHub, Stackacademytv",
     "license": "CC0-1.0",
     "devDependencies": {
-        "electron": "19.0.8",
+        "electron": "^6.1.12",
         "nodemon": "^2.0.0"
     },
     "dependencies": {
         "chart.js": "^3.9.1",
+        "custom-electron-titlebar": "^3.2.6",
         "electron-window-state": "^5.0.3",
         "node-fetch": "^2.6.1",
         "pg": "^8.7.3",
-        "require": "^2.4.20"
+        "require": "^0.4.4"
     }
 }

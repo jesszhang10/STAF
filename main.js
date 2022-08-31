@@ -1,7 +1,7 @@
-/* The main functionality for the application. Creates the browser window and menu bar. 
-Renders main.html. */
+/* The main process for the application. Creates the browser window and menu bar. 
+Renders main.html, and chart.html if the user selects 'View Chart' from the menu bar. */
 
-var {app, BrowserWindow, dialog, Menu, MenuItem, ipcMain} = require('electron');
+const {app, BrowserWindow, dialog, Menu, MenuItem, ipcMain} = require('electron');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
 const { StringDecoder } = require('string_decoder');
@@ -12,14 +12,8 @@ const { getHeapCodeStatistics } = require('v8');
 let mainWindow;
 
 function createWindow () {
-  // let state = windowStateKeeper({
-  //   defaultWidth: 1000, defaultHeight: 800
-  // })
 
   mainWindow = new BrowserWindow({
-    // x: state.x, y: state.y,
-    // width: state.width, height: state.height,
-    // minWidth: 350, maxWidth: 1200, minHeight:300,
     width: 1000, height: 800,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
@@ -30,7 +24,7 @@ function createWindow () {
     }
   })
 
-  mainWindow.loadFile('main.html');
+  mainWindow.loadFile('renderer/main.html');
   // state.manage(mainWindow);
 
   // Remove for PRODUCTION!
@@ -44,19 +38,13 @@ function createWindow () {
 }
 
 
-/* CREATE SECOND WINDOW WHEN 'View Chart' IS CALLED */
+/* CREATE SECOND WINDOW WHEN 'View Chart' IS SELECTED */
 
 let secondWindow;
 
 function createSecondWindow () {
-  // let state = windowStateKeeper({
-  //   defaultWidth: 900, defaultHeight: 750
-  // })
 
   secondWindow = new BrowserWindow({
-    // x: state.x, y: state.y,
-    // width: state.width, height: state.height,
-    // minWidth: 350, maxWidth: 1200, minHeight:300,
     width: 900, height: 750,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
@@ -66,8 +54,7 @@ function createSecondWindow () {
     }
   })
 
-  secondWindow.loadFile('chart.html');
-  // state.manage(mainWindow);
+  secondWindow.loadFile('chart-window/chart.html');
 
   secondWindow.webContents.openDevTools();
 
@@ -106,8 +93,9 @@ let fileMenu = new MenuItem(
         click: () => {
           try {
             mainWindow.webContents.send('save-file', fileContent);
-            console.log('New file content: ');
-            console.log(fileContent);
+            ipcMain.once('file-saved', (e, content) => {
+              fileContent = content;
+            })
           } catch {
             console.log('No file to be saved.');
           } 
@@ -119,7 +107,7 @@ let fileMenu = new MenuItem(
         click: () => {
           try {
             mainWindow.webContents.send('save-as');
-            saveFileAs();
+            saveFileAs(fileContent);
           } catch {
             console.log('No file name was specified.');
           }
@@ -131,7 +119,7 @@ let fileMenu = new MenuItem(
 
       {label: 'Close Folder',
         accelerator: 'CmdorCtrl+U',
-    },
+      },
     ]
   }
 )
@@ -185,7 +173,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 /* MENU BAR FUNCTIONS BELOW */
 
-/* OPENS FILE FROM MENU BAR, RETURNS FILE NAME & CONTENT */
+/* Opens file from menu bar, returns file name & content */
 function openFile() {
   const files = dialog.showOpenDialogSync(mainWindow, {
     properties: ['openFile'],
@@ -204,12 +192,11 @@ function openFile() {
 
 
 
-/* SAVES FILE AS NEW FILE FROM MENU BAR, INCLUDING ANY UPDATED CONTENT */
-function saveFileAs() {
+/* Saves file as new file from menu bar, including any updated content */
+function saveFileAs(fileContent) {
 
   dialog.showSaveDialog({
   }).then(file => {
-
     if (!file.canceled) {
       fs.writeFile(file.filePath.toString(), fileContent, function (err) {
         if (err) throw err;
@@ -221,4 +208,21 @@ function saveFileAs() {
   });
   
 }
+
+
+/* Create new file when 'new-file' icon is clicked. */
+ipcMain.on('create-new-file', (event) => {
+  var fileContent = '';
+  saveFileAs(fileContent);
+  console.log('here');
+  console.log(fileName);
+  event.sender.send('filename', fileName);
+});
+
+
+/* Download file when 'download' icon is clicked. */
+ipcMain.on('download-file', (event) => {
+  saveFileAs(fileContent);
+});
+
 

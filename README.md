@@ -1,36 +1,58 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
-
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Introduction:
+The overarching goal of this application is to guide users to make better design decisions by presenting data in a concise visual format. Complex datasheets are often difficult to read and understand, and STAF simplifies the process by enabling users to compare features of different systems in a radar chart. The application also serves as an editor, allowing users to view, edit, save, and share data files.
 
 
+Prototype:
+https://www.figma.com/proto/qrVAl5Yg7ACpn185JdYXed/STAF?node-id=91%3A794&scaling=min-zoom&page-id=0%3A1
 
-- Menu.js opens up the browser window and menu bar
-- Main.html renders the display
-- Main.css provides the styling for main window
-- Renderer.js implements functionality for menu bar functions 'open', 'save', and 'save as'
-- Create-chart.js draws a chart from the 'load chart' button in main.html
 
-- Chart.html renders the display for the second browser window (chart)
-- Chart.css provides the chart styling
-- Chart-renderer.js receives the call from menu bar 'view chart' to draw the chart
+Getting Started:
+The platform was developed using Electron v16.15.1. Currently, users can load in files, edit and save files, save them as different files, and view charts.
 
-- Move-sidebar.js expands and sidebar (file panel)
-- Fanless-configs.json and fanless-configs-copy.json are testing files
+
+User Flow:
+A typical user flow might look like:
+1. Loading in a file
+2. Clicking 'Load Chart' to see the attributes. User can click on one of the systems in the legend to cross it out and observe the others.
+3. Going back to the text file by clicking on it in the sidebar.
+4. Saving or editing that file, or loading in another file.
+
+
+Code:
+Main.js: 
+    - Creates the browser windows and menu bar. It renders renderer/main.html for the main window, and chart-window/chart.html for the second window (if the user selects View > View Chart from the menu bar).
+Renderer:
+    - Main.html: Architecture for the application
+    - Main.css: Styling for main.html
+    - Renderer.js: Completes the calls from the menu bar to open and save files
+    - Create-chart.js: Draws the chart in the main window
+    - Layout-functions: Intended to allow users to expand and shrink the sidebar (not yet implemented)
+Chart-window (chart appears in new window when the user selects View > View Chart):
+    - (Note (8/31): currently there is a bug preventing the chart from being loaded but this has
+      previously worked before)
+    - Chart.html: Architecture for the second window
+    - Chart.css: Styling for chart.html
+    - Chart-renderer.js: Renders display of chart in new window
+Test-files:
+    - Files you can use to test the drawing of the chart
+
+
+Build and Test:
+'npm start’ from your current directory allows you to see the application. You can log objects into dev tools and the console to test out code.
+
+
+Contribute:
+The application has potential for more features that would make it a better experience for users.
+    - Splash page (outlined in Figma) with manual
+    - Implementation of sidebar icons:
+        1. Profile: connect with Git/Azure
+        2. New file: create new file (done)
+        3. Download: download file (done)
+        4. Search: search for files
+        5. Home: bring you home to splash page
+    - Ability to export charts
+    - A custom menu bar that fits the darker theme
+
+
 

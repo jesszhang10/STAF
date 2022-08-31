@@ -1,0 +1,101 @@
+<!-- Main.html provides the main architecture for the application. -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>STAF</title>
+    <link rel="stylesheet" href="main.css"> 
+  </head>
+
+  <script src="../main.js"></script>
+  <script src="https://kit.fontawesome.com/e424e19172.js" crossorigin="anonymous"></script>
+  <script src="layout-functions.js"></script>
+  <script src="renderer.js"></script>
+  
+  <body>
+    <div class="mainApp">
+        <div class="contentArea" spellcheck="false">
+
+          <!-- SIDEBAR -->
+          <div id="mySidebar" class="sidebar"> 
+
+            <!-- SIDEBAR MENU -->
+            <div id="mySidebarMenu" class="sidebarMenu">
+              <a href="#"><i id="user" class="fa-regular fa-user"></i></a>
+              <a href="#"><i id="new-file" class="fa-solid fa-file-circle-plus"></i></a>
+              <a href="#"><i id="download" class="fa-solid fa-download"></i></a>
+              <a href="#"><i id="search" class="fa-solid fa-magnifying-glass"></i></a>
+              <a href="#"><i id="home" class="fa-solid fa-house"></i></a>
+            </div>
+
+            
+            <script>
+              var { ipcRenderer } = require('electron');
+              // Icon 1: connect o Github/Azure
+
+              // Icon 2: create new file
+              document.getElementById("new-file").addEventListener('click', e => {
+                ipcRenderer.send('create-new-file');
+                // createButton(get filename, fileContent);
+              })
+
+              // Icon 3: download file            
+              document.getElementById("download").addEventListener('click', e => {
+                  ipcRenderer.send('download-file');
+              })
+
+              // Icon 4: search for file
+
+
+              // Icon 5: return home
+
+            </script>
+
+            <!-- 'LOAD CHART' BUTTON -->
+            <button id="drawChartBtn" class="chartBtn">Load Chart &#62;</button> 
+              <script>
+                var button = document.getElementById('drawChartBtn');
+                button.addEventListener('click', () => {
+                  fileContent = document.getElementById('myContentPages').innerText;
+                  drawChart();
+                });
+              </script>  
+
+          </div> 
+
+        <!-- CONTENT PAGES (file/chart are loaded here) -->
+        <div id="myContentPages" class="contentPages" contenteditable="true">
+          <script>
+          // Enable tabbing 
+            document.getElementById("myContentPages").onkeydown = function(e) {
+              if (e.keyCode === 9) { // tab key
+                e.preventDefault();  // prevents tabbing out of editor
+
+                // insert 4 non-breaking spaces for the tab key
+                var editor = document.getElementById("myContentPages");
+                var doc = editor.ownerDocument.defaultView;
+                var sel = doc.getSelection();
+                var range = sel.getRangeAt(0);
+
+                var tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0");
+                range.insertNode(tabNode);
+
+                range.setStartAfter(tabNode);
+                range.setEndAfter(tabNode); 
+                sel.removeAllRanges();
+                sel.addRange(range);
+              }
+            }
+          </script>
+        </div>
+
+      </div>
+    </div>
+    
+  </body>
+</html>
+
+
+<!-- Must be rendered later -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="create-chart.js"></script>

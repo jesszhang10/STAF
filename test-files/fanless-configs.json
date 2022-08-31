@@ -1,0 +1,43 @@
+{
+    "title": "Datasheet - Fanless M Tablet Configurations",
+    "description": "Describes Fanless M Systems",
+    "inputFile": "PTL-System-Thermal-Acoustic-Specs.xlsx",
+    "guid": "c099448f-0763-4b66-85de-88e7db484fef",
+    "createdOn": "08/05/2022",
+    "specifications": [
+       {
+          "name": "Mobile Configuration",
+          "characteristics" : "Tamb=25C, On table; Starting condition: idle system for 10 min, esstimate starting Tski = 33C, Tj=40C",
+          "targets" : 
+          {
+                "skinTempUnits" : "°C",
+                "skinTempValue" : "30",
+                "motherboardAcousticSpecUnits" : "dBA",
+                "motherboardAcousticValue" : 9.7,
+                "tjForPerfAssessmentUnits" : "%",
+                "tjForPerfAssessmentValue" : 60,
+                "availableSystemThermalCapacityUnits" : "W",
+                "availableSystemThermalCapacityValue" : 11.2,
+                "socSystemAndMemoryPowerBudgetUnits" : "W",
+                "socSystemAndMemoryPowerBudgetValue" : 6.8,
+                "restOfSystemPowerBudgetUnits" : "W",
+                "restOfSystemPowerBudgetValue" : 4.5
+          },
+          "systemValues" : 
+          {
+                "skinTempUnits" : "°C",
+                "skinTempValue" : "42",
+                "motherboardAcousticSpecUnits" : "dBA",
+                "motherboardAcousticValue" : 9.4,
+                "tjForPerfAssessmentUnits" : "%",
+                "tjForPerfAssessmentValue" : 60,
+                "availableSystemThermalCapacityUnits" : "W",
+                "availableSystemThermalCapacityValue" : 10.1,
+                "socSystemAndMemoryPowerBudgetUnits" : "W",
+                "socSystemAndMemoryPowerBudgetValue" : 6.2,
+                "restOfSystemPowerBudgetUnits" : "W",
+                "restOfSystemPowerBudgetValue" : 4.4
+          }     
+       }
+    ]
+}

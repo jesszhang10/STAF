@@ -1,0 +1,129 @@
+/* Styling for main window: sidebar and content pages. */
+
+html, body{
+    margin: 0;
+    padding: 10;
+    font-size: 11pt; 
+    font-family:'Lucida Sans'; 
+    color: #dfe6f6;
+    background-color: #003862;
+    overflow-y: hidden;
+}
+
+.mainApp{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+.mainApp > .contentArea {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background-color: #003862;
+    overflow-y: hidden;
+}
+
+
+/* SIDEBAR */
+
+.sidebar{
+    position: fixed;
+    width: 20%;
+    height: 95%;
+    bottom: 0px;
+    font-size: 10pt;
+    background-color: #00223B;
+    transition: 0.4s;
+}
+
+.sidebarMenu{
+    position: fixed;
+    width: 20%;
+    height: 5%;
+    top: 0;
+    background-color: #00223B;
+}
+
+.sidebarMenu a{
+    float: left;
+    font-size: 15px;
+    width: 17%;
+    padding-left: 2px;
+    padding-top: 10px;
+    color: #c7cad0;
+    text-align: center;
+}
+
+.sidebarMenu a:hover{
+    color: white;
+}
+
+.chartBtn{
+    position: absolute;
+    bottom: 10px;
+    margin-left: 20%;
+    font-size: 11pt;
+    font-family: 'Lucida Sans';   
+    text-align: center;
+    color:#dfe6f6;
+    background-color: #00223B;
+    border: none;  
+}
+
+.chartBtn:hover{
+    text-decoration: underline;
+}
+
+.chartBtn:focus{
+    outline: none;
+}
+
+.fileButton {
+    padding: 6px;
+    padding-left: 12px;
+    border: 0px solid #1c293f; 
+}
+
+.fileButton:hover {
+    background-color: #2c456e;
+}
+
+.closeButton {
+    font-size: 11pt;
+    padding-right: 12px;
+    border: none;
+    background: none;
+}
+
+/* CONTENT PAGES */
+
+.contentArea > .contentPages{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px;
+    background-color: #003862;
+    width: 80%; 
+    height: 100%;
+    overflow: auto;
+    font-family: 'Lucida Sans';
+    /* white-space: pre-wrap; */
+    /* -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box; */
+}
+
+[contenteditable="true"]:focus {
+    outline: 0px solid transparent;
+    white-space: pre;
+}
+
+
+code {font-family: 'Lucida Console';
+      font-size: 10pt;
+    } 
