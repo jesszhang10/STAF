@@ -54,9 +54,3 @@ The application has potential for more features that would make it a better expe
     - Ability to export charts
     - A custom menu bar that fits the darker theme
 
-Small errors that should be handled soon:
-    - Closing a file (X) should leave content pages blank instead of undefined (renderer.js 105)
-    - Chart.html & chart-renderer.js are not rendering chart display (they were during the 8/20 commit)
-
-
-
