@@ -78,7 +78,8 @@ let fileMenu = new MenuItem(
         click: () => {
           try {
             [fileName, fileContent] = openFile();
-            mainWindow.webContents.send('open-file', fileName, fileContent);
+            // passed to renderer.js (82)
+            mainWindow.webContents.send('open-file', fileName, fileContent); 
           } catch {
             console.log('No file was opened.');
           }
@@ -214,9 +215,7 @@ function saveFileAs(fileContent) {
 ipcMain.on('create-new-file', (event) => {
   var fileContent = '';
   saveFileAs(fileContent);
-  console.log('here');
-  console.log(fileName);
-  event.sender.send('filename', fileName);
+  // brings you to ipcRenderer in main.html
 });
 
 

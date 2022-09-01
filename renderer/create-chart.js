@@ -41,7 +41,7 @@ function drawChart() {
                 datasetDict['data'] = data;
                 datasets.push(datasetDict);  
                 
-                // c. Set color
+                // c. Set color --> see definitions at bottom of file
                 let color = colors[index];
                 let colorTransparent = colorsTransparent[index];
                 datasetDict['fill'] = true;

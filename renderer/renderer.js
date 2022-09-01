@@ -28,6 +28,7 @@ and in the buttonToContent dictionary. */
 
 ipcRenderer.on('save-file', function (e, fileContent)
 {
+    // Retrieve updated fileContent from editor
     fileContent = document.getElementById('myContentPages').innerText;
     buttonToContent[fileName] = fileContent;
 
@@ -37,6 +38,8 @@ ipcRenderer.on('save-file', function (e, fileContent)
             console.log(err);
         }
     }); 
+
+    // Send fileContent back to main.js in order to store changes (97)
     e.sender.send('file-saved', fileContent);
 });
 
@@ -44,7 +47,7 @@ ipcRenderer.on('save-file', function (e, fileContent)
 /* Receives the call to save file as another file. */
 ipcRenderer.on('save-as', function (e)
 {
-    // update fileContent to be what's in the editor
+    // Update fileContent to be what's in the editor
     var contentPages = document.getElementById('myContentPages');
     fileContent = contentPages.innerText;
 });
@@ -85,16 +88,22 @@ function createButton(filename, fileContent) {
             document.getElementById("myContentPages").innerHTML = "<pre><code>" + buttonToContent[fileName] +"</code></pre>";     
         }
 
-        // // Create close button for each file 
-        // var closeBtn = document.createElement('button');
-        // closeBtn.className = 'closeButton';  
-        // closeBtn.innerHTML = '&times';
-        // fileBtn.appendChild(closeBtn);
+        // Create close button for each file 
+        var closeBtn = document.createElement('button');
+        closeBtn.className = 'closeButton';  
+        closeBtn.innerHTML = '&times';
+        fileBtn.appendChild(closeBtn);
 
-        // // When close is clicked, remove child
-        // closeBtn.onclick = function() {
-        //     document.getElementById("mySidebar").removeChild(fileBtn);
-        // }
+        // When close is clicked, remove child
+        closeBtn.onclick = function() {
+            document.getElementById("mySidebar").removeChild(fileBtn);          
+            // Remove from dictionary of buttons for this session
+            delete buttonToContent[filename];
+
+            fileContent = '';
+            // Needs fix: this line should clear editor instead of setting it to 'undefined'
+            document.getElementById("myContentPages").innerHTML = fileContent;
+        }
 
         document.getElementById("mySidebar").appendChild(fileBtn);
     }

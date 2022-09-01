@@ -31,12 +31,12 @@
             
             <script>
               var { ipcRenderer } = require('electron');
-              // Icon 1: connect o Github/Azure
+              // Icon 1: connect to Github/Azure
 
               // Icon 2: create new file
               document.getElementById("new-file").addEventListener('click', e => {
                 ipcRenderer.send('create-new-file');
-                // createButton(get filename, fileContent);
+                // createButton(get filename, fileContent); 
               })
 
               // Icon 3: download file            
@@ -44,7 +44,7 @@
                   ipcRenderer.send('download-file');
               })
 
-              // Icon 4: search for file
+              // Icon 4: search for file in sidebar
 
 
               // Icon 5: return home
@@ -57,6 +57,7 @@
                 var button = document.getElementById('drawChartBtn');
                 button.addEventListener('click', () => {
                   fileContent = document.getElementById('myContentPages').innerText;
+                  // fileContent is accessed by drawChart in create-chart.js
                   drawChart();
                 });
               </script>  

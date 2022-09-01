@@ -23,13 +23,13 @@ Code:
 Main.js: 
     - Creates the browser windows and menu bar. It renders renderer/main.html for the main window, and chart-window/chart.html for the second window (if the user selects View > View Chart from the menu bar).
 Renderer:
-    - Main.html: Architecture for the application
+    - Main.html: Architecture for the application (receives ipc calls from main.js)
     - Main.css: Styling for main.html
-    - Renderer.js: Completes the calls from the menu bar to open and save files
+    - Renderer.js: Completes the ipc calls from the menu bar (main.js) to open and save files
     - Create-chart.js: Draws the chart in the main window
     - Layout-functions: Intended to allow users to expand and shrink the sidebar (not yet implemented)
 Chart-window (chart appears in new window when the user selects View > View Chart):
-    - (Note (8/31): currently there is a bug preventing the chart from being loaded but this has
+    - (Note (9/1):currently there is a bug preventing the chart from being loaded but this has
       previously worked before)
     - Chart.html: Architecture for the second window
     - Chart.css: Styling for chart.html
@@ -53,6 +53,10 @@ The application has potential for more features that would make it a better expe
         5. Home: bring you home to splash page
     - Ability to export charts
     - A custom menu bar that fits the darker theme
+
+Small errors that should be handled soon:
+    - Closing a file (X) should leave content pages blank instead of undefined (renderer.js 105)
+    - Chart.html & chart-renderer.js are not rendering chart display (they were during the 8/20 commit)
 
 
 
